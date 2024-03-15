@@ -5,7 +5,7 @@ import EventHandler from './ApiHandler.jsx'
 import { emitKeypressEvents } from "readline";
 import NextResponse from "next/server";
 import ApiHandler from "./ApiHandler.jsx";
-import { ChangeEvent } from "react";
+import { ChangeEvent, FormEvent } from "react";
 
 //declare var keyPressed: boolean;
 
@@ -25,71 +25,73 @@ export default function WeatherApp() {
   const searchParams = useSearchParams();
   const pathName = usePathname();
   const { replace } = useRouter();
-  globalThis.keyPressed = false
- let location = '';
+let latitude = "";
+let longitude = "";
+let latParams = new URLSearchParams;
+let lonParams = new URLSearchParams;
   //const selectedLocation = searchParams.get("location");
  // console.log("this is selectedLocation " + selectedLocation);
   //const setLocation;
-  /*
-  try{
-  const data = await fetch(
-    `https://api.openweathermap.org/data/2.5/weather?q=${location}&units=imperial&appid=${process.env.API_KEY}`
-    );
-/*
-  const res = await data.json();
-  //[location, setLocation] = res;
-  
-  console.log(res.data);
-  
-    } catch (error){
-        console.log("Error connecting to api");
-        return new Response("Error in getting weather data", { status: 500 });
-    }
-//*/
- /*   replace.push(
-        `?location=${location}`
-        ,{
-           scroll:false, 
-        }
-    );    
-*/
-/*
-function vents(evt: ChangeEvent<HTMLInputElement>, pressed: boolean){
-  if(pressed){  
-  let locate = evt.target.value;
-    setLocation(locate, pressed);
+ 
+//async function onSubmit(event: FormEvent<HTMLFormElement>){
+   const onSubmit = (e: FormEvent) => {
+  try {
+   e.preventDefault()
+    //const formData = new FormData(event.currentTarget)
+    //location = formData.toString();
+    searchLat()
+    
+   // replace(`?${latParams}${lonParams}`)
+    ApiHandler(latitude, longitude);
+    //console.log(location)
+  } catch(error)
+  {
+    console.error(error);
   }
 }
-*/
 
-function setLocation(lct: string, evt: ChangeEvent<HTMLInputElement>){
+//the plan is to have 2 seperate set functions
+/*
+one will be for lat and the other for long
+so separate the long and lat specific code in set location
+call apihandler in onsubmit after searchlocation
+
+*/
+function setLat(lat: string){
     //console.log("this is keypressed before if" + keyPressed)
-    evt.preventDefault();
-    console.log("this is key pressed " + keyPressed)
-    if(globalThis.keyPressed){ 
-      const selectedLocation = searchParams.get("location");
-      console.log("this is selectedLocation " + selectedLocation);
-    replace(`?${new URLSearchParams({location: lct})}`)
+    
+    //console.log("this is key pressed " + keyPressed);
+    latitude = lat;
+    
+    //console.log("this is location now after setting it" + location);
+   //   const selectedLocation = searchParams.get("location");
+    //  console.log("this is selectedLocation " + selectedLocation);
+   // latParams = new URLSearchParams({latitude: lat});
+   
+    //
    // console.log("this is keypressed in if" + keyPressed)
-     ApiHandler(location);
+    
     }
-}
+
+  function setLon(lon: string){
+    longitude = lon;
+
+  //  lonParams = new URLSearchParams({longitude: lon})
+  }
 
 
 //let keyPressed:boolean = false;
-  function searchLocation(evt: React.KeyboardEvent<HTMLInputElement>){
-   evt.preventDefault();
-    let eveventChange ;
-  //  if(evt.key === 'Enter'){
+  function searchLat(){
+   
         
-        globalThis.keyPressed = true;
-
         //console.log("this e.target.value for event passed to search location " );
         const params = new URLSearchParams(searchParams);
-        console.log("this is if before location" + location);
-        if (location != ''){
-            params.set('query', location);
-            console.log("this is location" + location);
+        console.log("this is if before location" + latitude);
+        let latlon = latitude +","+ longitude
+        if (latitude !=  ""){
+
+            params.set('query', latlon);
+            //console.log("this is location" + location);
             console.log("params" + params);
         } else{
             params.delete('query');
@@ -116,19 +118,29 @@ function setLocation(lct: string, evt: ChangeEvent<HTMLInputElement>){
 return (
   <div className='app'>
     <div className="search">
-      <input
-       //value={typeof location === 'string' ? location : ''}
-       
-       onChange={event => {setLocation(event.target.value, event)}}
-       //onChange={change()}
-         
-                
-      onKeyDown={ event => {event.key === 'Enter' ? searchLocation(event) : null} }
       
+      <form onSubmit={onSubmit}>
+        <input
+        //value={typeof location === 'string' ? location : ''}
+        
+        onChange={event => {setLat(event.target.value)}}
+        
+        
+          placeholder="Enter Location"
+          type="text"
+         // defaultValue={searchParams.get('query')?.toString()}
+        /> 
+        <input
+        onChange={event => {setLon(event.target.value)}}
+        
+        
         placeholder="Enter Location"
         type="text"
         defaultValue={searchParams.get('query')?.toString()}
       /> 
+
+      <button type="submit">Submit</button> 
+      </form>
     </div>
   <div className="container">
     <div className="location">

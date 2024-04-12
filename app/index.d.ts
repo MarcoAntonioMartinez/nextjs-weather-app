@@ -1,5 +1,5 @@
 export {};
 
 declare global {
-    var keyPressed: boolean
+    var isSubmitted: boolean
 }

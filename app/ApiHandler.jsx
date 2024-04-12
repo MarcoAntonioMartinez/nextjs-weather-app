@@ -1,4 +1,4 @@
-
+import { NextResponse } from "next/server";
 
 export default async function ApiHandler(lat, lon) {
   
@@ -16,6 +16,8 @@ export default async function ApiHandler(lat, lon) {
    const data = await response.json();
     
     console.log(data);
+
+    //return NextResponse.json(data);
     
       } catch (error){
           console.log("Error connecting to api");

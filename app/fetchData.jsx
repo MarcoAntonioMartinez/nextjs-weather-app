@@ -10,7 +10,7 @@ async function getData({ lat, lon}){
       accept: "application/json",
     },
   };
-
+//neither of these work
   console.log(options)
     console.log("lat and lon " + lat + ", " + lon)
 
@@ -19,6 +19,7 @@ try {
         `http://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${process.env.NEXT_PUBLIC_API_KEY}&units=imperial`,
         options)
         const data = await response.json();
+        //no console log in this try block works
         console.log(response)
         console.log(data)
         //console.log("lat and lon " + lat + ", " + lon)
@@ -34,23 +35,7 @@ try {
 }
 
 export default async function fetchData({ lat, lon}){
-  
-      
- //       const response = await fetch(`${pathName}/api`)
-
-/*
- const response = await fetch(`./api/`, {
-       
-          headers: {
-           Accept: "application/json",
-           method: "GET",
-         },
-       });
-*/
-
-//const data = await getData();
-
-//
+  //only lat lon log displays
 console.log("lat and lon " + lat + ", " + lon)
 console.log(data.data)
 return getData({ lat, lon});

@@ -1,7 +1,7 @@
 # nextjs-weather-app
 
-# Dependencies
+## Dependencies
 
-Tanstack React Query
+### Tanstack React Query
 
 npm i @tanstack/react-query
